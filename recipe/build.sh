@@ -12,7 +12,6 @@ configure_args=(
 
 autoreconf_args=(
     --force
-    --verbose
     --install
     -I "${PREFIX}/share/aclocal"
     -I "${BUILD_PREFIX}/share/aclocal"
@@ -32,5 +31,9 @@ fi
 ./configure "${configure_args[@]}"
 make -j$CPU_COUNT
 make install
+
+if [[ "${CONDA_BUILD_CROSS_COMPILATION:-}" != "1" || "${CROSSCOMPILING_EMULATOR}" != "" ]]; then
+    make check
+fi
 
 rm -rf ${PREFIX}/share/man ${PREFIX}/share/doc/${PKG_NAME}
